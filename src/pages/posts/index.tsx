@@ -1,5 +1,9 @@
+import { GetStaticProps } from 'next';
 import Head from 'next/head';
 
+import Prismic from '@prismicio/client';
+
+import { getPrismicClient } from '../../services/prismic';
 import styles from './styles.module.scss';
 
 export default function Posts() {
@@ -40,3 +44,23 @@ export default function Posts() {
     </>
   );
 }
+
+export const getStaticProps: GetStaticProps = async () => {
+  const prismic = getPrismicClient();
+
+  const response = await prismic.query(
+    [Prismic.Predicates.at('document.type', 'post')],
+    {
+      fetch: ['title', 'content'],
+      pageSize: 100,
+    }
+  );
+
+  // use this to print the whole object on screen showing n level objects
+  // formatted as well
+  console.log(JSON.stringify(response, null, 2));
+
+  return {
+    props: {},
+  };
+};
