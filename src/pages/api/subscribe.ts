@@ -20,7 +20,7 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
     const session = await getSession({ req: request });
 
     const user = await fauna.query<User>(
-      q.Get(q.Match(q.Index('users_by_email'), q.Casefold(session.user.email)))
+      q.Get(q.Match(q.Index('user_by_email'), q.Casefold(session.user.email)))
     );
 
     let customerId = user.data.stripe_customer_id;
